@@ -1,0 +1,263 @@
+run:
+  concurrency: 4
+  timeout: 5m
+  issues-exit-code: 1
+  tests: true
+  build-tags:
+  skip-dirs:
+  skip-files:
+  modules-download-mode: readonly
+
+output:
+  format: tab
+  print-issued-lines: true
+  print-linter-name: true
+
+linters-settings:
+  dogsled:
+    # checks assignments with too many blank identifiers
+    max-blank-identifiers: 2
+
+  dupl:
+    # tokens count to trigger issue
+    threshold: 100
+
+  errcheck:
+    # report about not checking of errors in type assertions: `a := b.(MyStruct)`;
+    check-type-assertions: true
+    # report about assignment of errors to blank identifier: `num, _ := strconv.Atoi(numStr)`;
+    check-blank: true
+    # [deprecated] comma-separated list of pairs of the form pkg:regex
+    ignore:
+    # path to a file containing a list of functions to exclude from checking
+    exclude:
+
+  exhaustive:
+    # check switch statements in generated files also
+    check-generated: false
+    # indicates that switch statements are to be considered exhaustive if a
+    # 'default' case is present, even if all enum members aren't listed in the
+    # switch
+    default-signifies-exhaustive: false
+
+  funlen:
+    lines: 60
+    statements: 40
+
+  gci:
+    # put imports beginning with prefix after 3rd-party packages;
+    # only support one prefix
+    sections:
+      - standard # Standard section: captures all standard packages.
+      - default  # Default section: contains all imports that could not be matched to another section type.
+      - prefix(github.com/ismurov/pglocker) # Custom section: groups all imports with the specified Prefix.
+
+  gocognit:
+    # minimal code complexity to report, 30 by default (but we recommend 10-20)
+    min-complexity: 15
+
+  gocyclo:
+    # minimal code complexity to report, 30 by default (but we recommend 10-20)
+    min-complexity: 15
+
+  goconst:
+    # minimal length of string constant, 3 by default
+    min-len: 3
+    # minimal occurrences count to trigger, 3 by default
+    min-occurrences: 3
+
+  gocritic:
+    enabled-checks:
+    disabled-checks:
+    enabled-tags:
+      - performance
+      - diagnostic
+      - style
+      - experimental
+      - opinionated
+    disabled-tags:
+    settings:
+
+  nestif:
+    # minimal complexity of if statements to report, 5 by default
+    min-complexity: 4
+
+  godot:
+    # check all top-level comments, not only declarations
+    scope: toplevel
+    period: true
+    capital: true
+
+  godox:
+    # report any comments starting with keywords, this is useful for TODO or FIXME comments that
+    # might be left in the code accidentally and should be resolved before merging
+    keywords:
+      - OPTIMIZE # marks code that should be optimized before merging
+      - HACK # marks hack-arounds that should be removed before merging
+
+  gofmt:
+    # simplify code: gofmt with `-s` option, true by default
+    simplify: true
+
+  goheader:
+  # see https://golangci-lint.run/usage/configuration/ to example
+
+  goimports:
+    # put imports beginning with prefix after 3rd-party packages;
+    # it's a comma-separated list of prefixes
+    local-prefixes: github.com/ismurov/pglocker
+
+  gomnd:
+    settings:
+      mnd:
+        # the list of enabled checks, see https://github.com/tommy-muehle/go-mnd/#checks for description.
+        checks: argument,case,condition,operation,return,assign
+        ignored-functions: strconv.ParseInt,strconv.FormatInt,strconv.ParseFloat
+
+  gomodguard:
+  # see https://golangci-lint.run/usage/configuration/ to example
+
+  govet:
+    # report about shadowed variables
+    check-shadowing: true
+    # settings per analyzer
+    settings:
+      printf: # analyzer name, run `go tool vet help` to see all analyzers
+        funcs: # run `go tool vet help printf` to see available settings for `printf` analyzer
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Infof
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
+    # enable or disable analyzers by name
+    enable:
+    enable-all: true
+    disable-all: false
+
+  depguard:
+    list-type: blacklist
+    include-go-root: true
+    packages:
+    packages-with-error-message:
+
+  lll:
+    # max line length, lines longer will be reported. Default is 120.
+    # '\t' is counted as 1 character by default, and can be changed with the tab-width option
+    line-length: 250
+    # tab width in spaces. Default to 1.
+    tab-width: 1
+
+  misspell:
+    # Correct spellings using locale preferences for US or UK.
+    # Setting locale to US will correct the British spelling of 'colour' to 'color'.
+    locale: US
+    ignore-words:
+
+  nakedret:
+    # make an issue if func has more lines of code than this setting and it has naked returns; default is 30
+    max-func-lines: 30
+
+  prealloc:
+    # XXX: we don't recommend using this linter before doing performance profiling.
+    # For most programs usage of prealloc will be a premature optimization.
+    # Report preallocation suggestions only on simple loops that have no returns/breaks/continues/gotos in them.
+    # True by default.
+    simple: true
+    range-loops: true # Report preallocation suggestions on range loops, true by default
+    for-loops: true   # Report preallocation suggestions on for loops, false by default
+
+  nolintlint:
+    # Enable to ensure that nolint directives are all used. Default is true.
+    allow-unused: true
+    # Disable to ensure that nolint directives don't have a leading space. Default is true.
+    allow-leading-space: true
+    # Exclude following linters from requiring an explanation.  Default is [].
+    allow-no-explanation: [ ]
+    # Enable to require an explanation of nonzero length after each nolint directive. Default is false.
+    require-explanation: true
+    # Enable to require nolint directives to mention the specific linter being suppressed. Default is false.
+    require-specific: true
+
+  rowserrcheck:
+    packages:
+
+  testpackage:
+    # regexp pattern to skip files
+    skip-regexp: (export|internal)_test\.go
+
+  unparam:
+    # Inspect exported functions, default is false. Set to true if no external program/library imports your code.
+    # XXX: if you enable this setting, unparam will report a lot of false-positives in text editors:
+    # if it's called for subdir of a project it can't find external interfaces. All text editor integrations
+    # with golangci-lint call it on a directory with the changed file.
+    check-exported: true
+
+  unused:
+    # treat code as a program (not a library) and report unused exported identifiers; default is false.
+    # XXX: if you enable this setting, unused will report a lot of false-positives in text editors:
+    # if it's called for subdir of a project it can't find funcs usages. All text editor integrations
+    # with golangci-lint call it on a directory with the changed file.
+    check-exported: true
+
+  whitespace:
+  # Tool for detection of leading and trailing whitespace
+
+  wsl:
+  # Whitespace Linter - Forces you to use empty lines!
+
+  gofumpt:
+    # Choose whether or not to use the extra rules that are disabled
+    # by default
+    extra-rules: false
+
+  errorlint:
+    # Report non-wrapping error creation using fmt.Errorf
+    errorf: true
+
+linters:
+  enable:
+  enable-all: true
+  disable:
+    - gochecknoglobals # мешает метрикам / логеру
+    - wsl         # ругается много и не по делу
+    - nlreturn    # раздражает что требует чистую строку в if-else
+    - exhaustivestruct # deprecated (since v1.46.0)
+    - testpackage # заставляет писать тесты в пакетах *_test
+    - varnamelen  # спамит на переменные типа "ok" / "tx"
+    - golint      # The linter 'golint' is deprecated (since v1.41.0) due to: The repository of the linter has been archived by the owner.  Replaced by revive.
+    - maligned    # The linter 'maligned' is deprecated (since v1.38.0) due to: The repository of the linter has been archived by the owner.  Replaced by govet 'fieldalignment'.
+    - scopelint   # The linter 'scopelint' is deprecated (since v1.39.0) due to: The repository of the linter has been deprecated by the owner.  Replaced by exportloopref.
+    - ifshort     # The linter 'ifshort' is deprecated (since v1.48.0) due to: The repository of the linter has been deprecated by the owner.
+    - tagliatelle # wants json tags to be in camelCase
+    - exhaustruct     # требует заполнять все поля в структуре, не всегда актуально
+    - godot           # требует мусор в комментариях
+    - paralleltest    # увеличивает код тестов, профита нет
+    - gomoddirectives # мешает делать быстрые replace
+    - govet         # иногда полезнее делать удобной структуру чем экономить пару байт
+    - rowserrcheck  # disabled because of generics.
+    - sqlclosecheck # disabled because of generics.
+    - structcheck   # disabled because of generics.
+    - wastedassign  # disabled because of generics.
+    - nosnakecase   # deprecated (since v1.48.1)
+    - interfacer    # deprecated (since v1.38.0)
+    - varcheck      # deprecated (since v1.49.0)
+    - deadcode      # deprecated (since v1.49.0)
+    - nonamedreturns
+
+  disable-all: false
+  presets:
+  fast: false
+
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - ireturn
+        - errcheck
+        - gosec
+        - noctx
+        - goerr113
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  new: false
